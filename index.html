@@ -504,9 +504,9 @@ footer p { max-width: none; }
 <section id="explainer">
   <div class="shead">
     <h2>Watch the window open and close</h2>
-    <span class="eyebrow">Animated explainer · 40 sec</span>
+    <span class="eyebrow">Animated explainer · narrated · about 1 min</span>
   </div>
-  <p class="lede">One pot of water, from the fridge to a rolling boil. Press play and watch where Bishul begins, where R' Moshe says it ends, and where everyone agrees it is over.</p>
+  <p class="lede">One pot of water, from the fridge to a rolling boil. Press play, turn your sound on, and watch where Bishul begins, where R' Moshe says it ends, and where everyone agrees it is over.</p>
 
   <div class="player">
     <svg class="ill" id="xp-svg" viewBox="0 0 640 330" aria-label="Animation of a pot of water heating on a blech, with a thermometer">
@@ -597,6 +597,7 @@ footer p { max-width: none; }
     <div class="xp-controls">
       <button type="button" id="xp-play" class="btn" aria-label="Play">Play</button>
       <button type="button" id="xp-restart" class="btn ghost">Restart</button>
+      <button type="button" id="xp-voice" class="btn ghost" aria-pressed="true" hidden>Voice: on</button>
       <div class="xp-track" id="xp-track" role="slider" aria-label="Timeline" aria-valuemin="0" aria-valuemax="40" aria-valuenow="0" tabindex="0">
         <div class="xp-fill" id="xp-fill"></div>
         <div class="xp-marks" id="xp-marks"></div>
@@ -846,6 +847,39 @@ footer p { max-width: none; }
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var t = 0, playing = false, last = 0, raf = 0, curScene = -1;
 
+  // Narration via the browser's speech engine. The timeline waits at the end of a scene until its line is spoken.
+  var synth = window.speechSynthesis, voiceOn = false, speaking = false, spokenScene = -1, voiceBtn = $('xp-voice');
+  if (synth && window.SpeechSynthesisUtterance) {
+    voiceOn = true; voiceBtn.hidden = false;
+    voiceBtn.addEventListener('click', function () {
+      voiceOn = !voiceOn; voiceBtn.textContent = 'Voice: ' + (voiceOn ? 'on' : 'off'); voiceBtn.setAttribute('aria-pressed', voiceOn);
+      if (!voiceOn) stopSpeech();
+    });
+  }
+  function pickVoice() {
+    var vs = synth.getVoices(); if (!vs.length) return null;
+    var pref = ['Samantha', 'Google US English', 'Microsoft Aria', 'Microsoft Jenny', 'Daniel', 'Karen'];
+    for (var i = 0; i < pref.length; i++) for (var j = 0; j < vs.length; j++) if (vs[j].name.indexOf(pref[i]) === 0) return vs[j];
+    for (var k = 0; k < vs.length; k++) if (/^en[-_]/.test(vs[k].lang)) return vs[k];
+    return vs[0];
+  }
+  function speak(i) {
+    if (!voiceOn || !synth) return;
+    synth.cancel();
+    var u = new SpeechSynthesisUtterance(scenes[i].speech || scenes[i].text);
+    var v = pickVoice(); if (v) u.voice = v;
+    u.rate = 0.95; u.pitch = 1;
+    speaking = true; spokenScene = i;
+    u.onend = u.onerror = function () { speaking = false; };
+    synth.speak(u);
+  }
+  function stopSpeech() { if (synth) synth.cancel(); speaking = false; }
+  // pronunciation hints for the speech engine (display text stays as written)
+  scenes[1].speech = "Below yahd so-LEH-det bo, there is no Bishul from the Torah. The Rabbis still forbid warming here if the spot could reach 110 degrees, in case you forget and leave it. The question is about the place, not your plan.";
+  scenes[2].speech = "The hand pulls back by reflex. Yahd so-LEH-det bo, about 110 degrees. From this moment on, heating the water is Bishul, a Torah prohibition.";
+  scenes[4].speech = "At about 160 degrees, Rav Moshe Feinstein says the water is cooked: no further Bishul. The strict view disagrees, and keeps the window open until a boil. This is the urn gauge dispute.";
+  scenes[5].speech = "212 degrees. The water has boiled, and by every opinion there is no more Bishul. But the pot is still on the fire, so stirring it, or ladling from it, looks like cooking, and stays forbidden.";
+
   scenes.forEach(function (s, i) {
     if (i === 0) return;
     var m = document.createElement('span'); m.style.left = (s.t / DUR * 100) + '%'; el.marks.appendChild(m);
@@ -879,32 +913,48 @@ footer p { max-width: none; }
     el.zoneB.setAttribute('opacity', t >= 25 ? 1 : 0);
     // caption
     var si = 0; for (var i = 0; i < scenes.length; i++) if (t >= scenes[i].t) si = i;
-    if (si !== curScene) { curScene = si; el.text.textContent = scenes[si].text; el.step.textContent = 'Scene ' + (si + 1) + ' of ' + scenes.length; }
+    if (si !== curScene) {
+      curScene = si; el.text.textContent = scenes[si].text; el.step.textContent = 'Scene ' + (si + 1) + ' of ' + scenes.length;
+      if (playing && voiceOn && spokenScene !== si) speak(si);
+    }
     el.fill.style.width = (t / DUR * 100) + '%';
     el.track.setAttribute('aria-valuenow', Math.round(t));
     el.time.textContent = fmt(t) + ' / ' + fmt(DUR);
   }
   function tick(now) {
     if (playing) {
-      if (last) t = clamp(t + (now - last) / 1000, 0, DUR);
+      if (last) {
+        var nt = clamp(t + (now - last) / 1000, 0, DUR);
+        // hold at the end of the current scene while its narration is still being spoken
+        if (voiceOn && speaking) {
+          var next = DUR; for (var q = 0; q < scenes.length; q++) if (scenes[q].t > t) { next = scenes[q].t; break; }
+          if (nt >= next - 0.05) nt = Math.max(t, next - 0.05);
+        }
+        t = nt;
+      }
       last = now;
-      if (t >= DUR) { playing = false; el.play.textContent = 'Replay'; }
+      if (t >= DUR && !speaking) { playing = false; el.play.textContent = 'Replay'; }
     }
     render(now);
     raf = requestAnimationFrame(tick);
   }
-  function play() { if (t >= DUR) t = 0; playing = true; last = 0; el.play.textContent = 'Pause'; }
-  function pause() { playing = false; el.play.textContent = 'Play'; }
+  function play() {
+    if (t >= DUR) { t = 0; spokenScene = -1; }
+    playing = true; last = 0; el.play.textContent = 'Pause';
+    if (voiceOn && curScene >= 0 && spokenScene !== curScene) speak(curScene);
+  }
+  function pause() { playing = false; el.play.textContent = 'Play'; stopSpeech(); }
   el.play.addEventListener('click', function () { playing ? pause() : play(); });
-  el.restart.addEventListener('click', function () { t = 0; play(); });
+  el.restart.addEventListener('click', function () { t = 0; spokenScene = -1; curScene = -1; stopSpeech(); play(); });
   function seekFromEvent(e) {
     var r = el.track.getBoundingClientRect(); var x = (e.touches ? e.touches[0].clientX : e.clientX) - r.left;
-    t = clamp(x / r.width, 0, 1) * DUR; if (!playing) el.play.textContent = 'Play';
+    t = clamp(x / r.width, 0, 1) * DUR; stopSpeech(); spokenScene = -1; curScene = -1; if (!playing) el.play.textContent = 'Play';
   }
+  window.addEventListener('pagehide', stopSpeech);
   el.track.addEventListener('click', seekFromEvent);
   el.track.addEventListener('keydown', function (e) {
-    if (e.key === 'ArrowRight') { t = clamp(t + 2, 0, DUR); e.preventDefault(); }
-    if (e.key === 'ArrowLeft') { t = clamp(t - 2, 0, DUR); e.preventDefault(); }
+    if (e.key === 'ArrowRight') { t = clamp(t + 2, 0, DUR); stopSpeech(); spokenScene = -1; curScene = -1; e.preventDefault(); }
+    if (e.key === 'ArrowLeft') { t = clamp(t - 2, 0, DUR); stopSpeech(); spokenScene = -1; curScene = -1; e.preventDefault(); }
     if (e.key === ' ' || e.key === 'Enter') { playing ? pause() : play(); e.preventDefault(); }
   });
   raf = requestAnimationFrame(tick);
