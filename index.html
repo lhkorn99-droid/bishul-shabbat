@@ -115,6 +115,23 @@ dt { display: flex; justify-content: space-between; gap: 12px; align-items: base
 dt .he { font-weight: 400; color: var(--ink-2); }
 dd { margin: 4px 0 0; color: var(--ink-2); font-size: 15px; }
 
+/* explainer */
+.player { background: var(--paper); border: 1px solid var(--line); border-radius: 6px; padding: 20px; display: grid; gap: 16px; }
+.player svg { width: 100%; max-width: 640px; margin-inline: auto; }
+.xp-caption { min-height: 84px; border-top: 1px solid var(--line); padding-top: 14px; }
+.xp-caption p { max-width: none; font-size: 17px; margin-top: 6px; }
+.xp-controls { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.btn { font: 500 14px var(--body); color: var(--paper); background: var(--ink); border: 1px solid var(--ink); border-radius: 4px; padding: 8px 16px; cursor: pointer; min-width: 76px; }
+.btn.ghost { background: transparent; color: var(--ink); }
+.btn:focus-visible { outline: 2px solid var(--flame); outline-offset: 2px; }
+.xp-track { flex: 1 1 200px; height: 10px; background: var(--line); border-radius: 5px; position: relative; cursor: pointer; min-width: 0; }
+.xp-track:focus-visible { outline: 2px solid var(--flame); outline-offset: 3px; }
+.xp-fill { height: 100%; width: 0; background: var(--flame); border-radius: 5px; }
+.xp-marks { position: absolute; inset: 0; }
+.xp-marks span { position: absolute; top: -3px; width: 2px; height: 16px; background: var(--paper); transform: translateX(-1px); }
+#xp-hand { transition: transform .35s ease; }
+@media (prefers-reduced-motion: reduce) { #xp-hand { transition: none; } }
+
 footer { padding-block: 32px 0; color: var(--ink-2); font-size: 14px; }
 footer p { max-width: none; }
 
@@ -483,6 +500,112 @@ footer p { max-width: none; }
   </div>
 </section>
 
+<!-- ============ ANIMATED EXPLAINER ============ -->
+<section id="explainer">
+  <div class="shead">
+    <h2>Watch the window open and close</h2>
+    <span class="eyebrow">Animated explainer · 40 sec</span>
+  </div>
+  <p class="lede">One pot of water, from the fridge to a rolling boil. Press play and watch where Bishul begins, where R' Moshe says it ends, and where everyone agrees it is over.</p>
+
+  <div class="player">
+    <svg class="ill" id="xp-svg" viewBox="0 0 640 330" aria-label="Animation of a pot of water heating on a blech, with a thermometer">
+      <defs>
+        <clipPath id="xp-water-clip"><rect x="150" y="128" width="200" height="110"/></clipPath>
+        <pattern id="xp-hatch" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+          <rect width="8" height="8" fill="var(--paper)"/>
+          <line x1="0" y1="0" x2="0" y2="8" stroke="var(--flame)" stroke-width="3"/>
+        </pattern>
+      </defs>
+
+      <!-- blech, burner, flame -->
+      <rect x="110" y="246" width="280" height="12" rx="2" class="pp"/>
+      <rect x="150" y="290" width="200" height="6" rx="3"/>
+      <path d="M250 296 v14 M160 310 h180"/>
+      <g id="xp-flame" style="transform-origin:250px 290px">
+        <path d="M250 290 c-18 -24 -4 -42 10 -52 c-3 18 10 20 14 10 c10 14 3 32 -10 42 Z" class="fl"/>
+        <path d="M252 288 c-8 -12 -1 -22 5 -28 c-1 9 6 10 7 5 c5 8 1 16 -4 23 Z" fill="var(--flame-soft)" stroke="none"/>
+      </g>
+
+      <!-- pot -->
+      <g>
+        <rect x="150" y="128" width="200" height="110" rx="4" class="pp"/>
+        <g clip-path="url(#xp-water-clip)">
+          <rect id="xp-water" x="150" y="150" width="200" height="90" fill="var(--flame-soft)" stroke="none" opacity="0"/>
+          <g id="xp-bubbles" stroke="var(--flame)" fill="none" opacity="0">
+            <circle cx="180" cy="220" r="4"/><circle cx="215" cy="200" r="3"/><circle cx="250" cy="226" r="5"/>
+            <circle cx="285" cy="205" r="3"/><circle cx="320" cy="222" r="4"/><circle cx="235" cy="180" r="3"/><circle cx="300" cy="175" r="4"/>
+          </g>
+        </g>
+        <rect x="150" y="128" width="200" height="110" rx="4" fill="none"/>
+        <path d="M150 128 h200 M150 160 h-18 a8 8 0 0 0 0 16 h18 M350 160 h18 a8 8 0 0 1 0 16 h-18"/>
+        <g id="xp-steam" stroke="var(--ink-2)" opacity="0">
+          <path d="M200 112 c-8 -12 8 -18 0 -30"/><path d="M250 106 c-8 -12 8 -18 0 -30"/><path d="M300 112 c-8 -12 8 -18 0 -30"/>
+        </g>
+      </g>
+
+      <!-- hand testing the water -->
+      <g id="xp-hand" style="transform-origin:380px 100px">
+        <path d="M372 116 c-10 2 -16 8 -18 16 l-4 10 c-2 4 2 8 6 6 l4 -8 M372 116 c4 2 6 8 2 12 l-8 14 M372 116 l8 -6 M376 124 l10 -4 M375 132 l9 -1"/>
+      </g>
+
+      <!-- thermometer -->
+      <g>
+        <rect x="470" y="30" width="22" height="230" rx="11" class="pp"/>
+        <circle cx="481" cy="268" r="18" class="pp"/>
+        <!-- zone bands: scale 40°F at y=250 → 220°F at y=40; 1.1667 px per °F -->
+        <rect x="478" y="110" width="8" height="58" fill="var(--flame-soft)" stroke="none"/>  <!-- 110–160 -->
+        <rect x="478" y="49" width="8" height="61" fill="url(#xp-hatch)" stroke="none"/>       <!-- 160–212 -->
+        <rect id="xp-mercury" x="478" y="250" width="8" height="0" fill="var(--flame)" stroke="none"/>
+        <circle cx="481" cy="268" r="11" class="fl"/>
+        <!-- ticks and labels -->
+        <g stroke="var(--ink-2)">
+          <path d="M492 168 h8 M492 110 h8 M492 49 h8 M492 250 h6"/>
+        </g>
+        <text x="506" y="172" class="tx">110°F</text>
+        <text x="506" y="114" class="tx">160°F</text>
+        <text x="506" y="53" class="tx">212°F</text>
+        <text x="506" y="254" class="tx2">40°F</text>
+        <text id="xp-readout" x="481" y="22" class="tx" text-anchor="middle" style="font-size:15px;font-weight:500">40°F</text>
+        <!-- zone callouts -->
+        <text id="xp-zone-a" x="560" y="145" class="tx2" style="font-size:11px" opacity="0">Bishul</text>
+        <text id="xp-zone-b" x="560" y="84" class="tx2" style="font-size:11px" opacity="0">disputed</text>
+      </g>
+
+      <!-- thought bubble (gezeira) -->
+      <g id="xp-thought" opacity="0">
+        <rect x="30" y="40" width="122" height="46" rx="23" class="pp"/>
+        <text x="91" y="59" class="tx" text-anchor="middle" style="font-size:11px">could this spot</text>
+        <text x="91" y="75" class="tx" text-anchor="middle" style="font-size:11px;font-weight:500">reach 110°F?</text>
+        <circle cx="150" cy="96" r="4" class="pp"/><circle cx="160" cy="108" r="2.5" class="pp"/>
+      </g>
+
+      <!-- "no stirring" ladle appears at the end -->
+      <g id="xp-ladle" opacity="0">
+        <path d="M262 200 l52 -92" stroke-width="3"/>
+        <path d="M248 198 a14 10 0 1 0 28 0 a14 10 0 1 0 -28 0 Z" class="pp"/>
+        <circle cx="330" cy="92" r="16" fill="var(--no-soft)" stroke="var(--no)"/>
+        <path d="M320 82 l20 20" stroke="var(--no)"/>
+      </g>
+    </svg>
+
+    <div class="xp-caption">
+      <div class="eyebrow" id="xp-step">Scene 1 of 6</div>
+      <p id="xp-text">Cold water, a lit flame, and a pot on the blech. Bishul is a significant change through heat. For a liquid, the window is measured in temperature.</p>
+    </div>
+
+    <div class="xp-controls">
+      <button type="button" id="xp-play" class="btn" aria-label="Play">Play</button>
+      <button type="button" id="xp-restart" class="btn ghost">Restart</button>
+      <div class="xp-track" id="xp-track" role="slider" aria-label="Timeline" aria-valuemin="0" aria-valuemax="40" aria-valuenow="0" tabindex="0">
+        <div class="xp-fill" id="xp-fill"></div>
+        <div class="xp-marks" id="xp-marks"></div>
+      </div>
+      <span class="mono" id="xp-time" style="font-size:12px;color:var(--ink-2)">0:00 / 0:40</span>
+    </div>
+  </div>
+</section>
+
 <!-- ============ GEZEIRA 1 ============ -->
 <section id="gezeira1">
   <div class="shead">
@@ -692,6 +815,101 @@ footer p { max-width: none; }
 </footer>
 
 </div>
+
+<script>
+(function () {
+  var DUR = 40;
+  var scenes = [
+    { t: 0,  text: "Cold water, a lit flame, and a pot on the blech. Bishul is a significant change through heat. For a liquid, the window is measured in temperature." },
+    { t: 4,  text: "Below yad soledes bo there is no Bishul from the Torah. The Rabbis still forbid warming here if the spot could reach 110°F, in case you forget and leave it. The question is about the place, not your plan." },
+    { t: 12, text: "The hand pulls back by reflex. Yad soledes bo, about 110°F. From this moment on, heating the water is Bishul, a Torah prohibition." },
+    { t: 17, text: "Inside the window, every degree of heating is cooking. This is the zone everyone agrees on." },
+    { t: 25, text: "At about 160°F, R' Moshe Feinstein says the water is cooked: no further Bishul. The strict view disagrees and keeps the window open until a boil. This is the urn-gauge dispute." },
+    { t: 33, text: "212°F. The water has boiled, and by every opinion there is no more Bishul. But the pot is still on the fire, so stirring it, or ladling from it, looks like cooking and stays forbidden." }
+  ];
+  function temp(t) {
+    if (t < 4)  return 40;
+    if (t < 12) return 40 + (t - 4) / 8 * 60;
+    if (t < 17) return 100 + (t - 12) / 5 * 10;
+    if (t < 25) return 110 + (t - 17) / 8 * 50;
+    if (t < 33) return 160 + (t - 25) / 8 * 52;
+    return 212;
+  }
+  var $ = function (id) { return document.getElementById(id); };
+  var el = {
+    mercury: $('xp-mercury'), readout: $('xp-readout'), water: $('xp-water'), steam: $('xp-steam'),
+    bubbles: $('xp-bubbles'), flame: $('xp-flame'), hand: $('xp-hand'), thought: $('xp-thought'),
+    ladle: $('xp-ladle'), zoneA: $('xp-zone-a'), zoneB: $('xp-zone-b'),
+    text: $('xp-text'), step: $('xp-step'), play: $('xp-play'), restart: $('xp-restart'),
+    track: $('xp-track'), fill: $('xp-fill'), marks: $('xp-marks'), time: $('xp-time')
+  };
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var t = 0, playing = false, last = 0, raf = 0, curScene = -1;
+
+  scenes.forEach(function (s, i) {
+    if (i === 0) return;
+    var m = document.createElement('span'); m.style.left = (s.t / DUR * 100) + '%'; el.marks.appendChild(m);
+  });
+
+  function fmt(s) { s = Math.round(s); return Math.floor(s / 60) + ':' + ('0' + (s % 60)).slice(-2); }
+  function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
+
+  function render(now) {
+    var T = temp(t);
+    var y = 250 - (T - 40) * (210 / 180);
+    el.mercury.setAttribute('y', y); el.mercury.setAttribute('height', 250 - y);
+    el.readout.textContent = Math.round(T) + '°F';
+    el.water.setAttribute('opacity', clamp((T - 40) / 172, 0, 1) * 0.9);
+    el.steam.setAttribute('opacity', clamp((T - 110) / 100, 0, 1));
+    var boiling = T >= 205;
+    el.bubbles.setAttribute('opacity', boiling ? 1 : 0);
+    if (!reduce) {
+      var wob = Math.sin(now / 180) * 3;
+      el.bubbles.setAttribute('transform', 'translate(0 ' + (boiling ? wob : 0) + ')');
+      el.steam.setAttribute('transform', 'translate(0 ' + (Math.sin(now / 400) * 3) + ')');
+      el.flame.style.transform = 'scale(' + (1 + Math.sin(now / 120) * 0.04) + ', ' + (1 + Math.sin(now / 90) * 0.06) + ')';
+    }
+    // hand: approaches during scene 2, recoils at yad soledes
+    var handOn = t >= 8 && t < 19;
+    el.hand.setAttribute('opacity', handOn ? 1 : 0);
+    el.hand.style.transform = (T >= 109) ? 'translate(60px,-40px) rotate(-25deg)' : 'translate(0,0)';
+    el.thought.setAttribute('opacity', t >= 4 && t < 12 ? 1 : 0);
+    el.ladle.setAttribute('opacity', t >= 35 ? 1 : 0);
+    el.zoneA.setAttribute('opacity', t >= 17 ? 1 : 0);
+    el.zoneB.setAttribute('opacity', t >= 25 ? 1 : 0);
+    // caption
+    var si = 0; for (var i = 0; i < scenes.length; i++) if (t >= scenes[i].t) si = i;
+    if (si !== curScene) { curScene = si; el.text.textContent = scenes[si].text; el.step.textContent = 'Scene ' + (si + 1) + ' of ' + scenes.length; }
+    el.fill.style.width = (t / DUR * 100) + '%';
+    el.track.setAttribute('aria-valuenow', Math.round(t));
+    el.time.textContent = fmt(t) + ' / ' + fmt(DUR);
+  }
+  function tick(now) {
+    if (playing) {
+      if (last) t = clamp(t + (now - last) / 1000, 0, DUR);
+      last = now;
+      if (t >= DUR) { playing = false; el.play.textContent = 'Replay'; }
+    }
+    render(now);
+    raf = requestAnimationFrame(tick);
+  }
+  function play() { if (t >= DUR) t = 0; playing = true; last = 0; el.play.textContent = 'Pause'; }
+  function pause() { playing = false; el.play.textContent = 'Play'; }
+  el.play.addEventListener('click', function () { playing ? pause() : play(); });
+  el.restart.addEventListener('click', function () { t = 0; play(); });
+  function seekFromEvent(e) {
+    var r = el.track.getBoundingClientRect(); var x = (e.touches ? e.touches[0].clientX : e.clientX) - r.left;
+    t = clamp(x / r.width, 0, 1) * DUR; if (!playing) el.play.textContent = 'Play';
+  }
+  el.track.addEventListener('click', seekFromEvent);
+  el.track.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowRight') { t = clamp(t + 2, 0, DUR); e.preventDefault(); }
+    if (e.key === 'ArrowLeft') { t = clamp(t - 2, 0, DUR); e.preventDefault(); }
+    if (e.key === ' ' || e.key === 'Enter') { playing ? pause() : play(); e.preventDefault(); }
+  });
+  raf = requestAnimationFrame(tick);
+})();
+</script>
 
 </body>
 </html>
