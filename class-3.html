@@ -1,0 +1,556 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kli Rishon, Sheni, Shlishi</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;500;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a single narrow reading column (sefer page) with full-width illustrated bands between sections. */
+:root {
+  --bg: #F1F2EE;          /* cool stone, slight green bias */
+  --paper: #FAFAF7;       /* raised panel */
+  --ink: #1C2B2E;         /* deep teal-black */
+  --ink-2: #4A5A5D;       /* secondary text */
+  --line: #C9CFCB;        /* rules and strokes */
+  --flame: #D9822B;       /* amber, the only warm color */
+  --flame-soft: #F6E3CF;  /* amber tint for fills */
+  --ok: #2E7D5B;          /* permitted */
+  --ok-soft: #DCEFE4;
+  --no: #B23A3A;          /* forbidden */
+  --no-soft: #F3DBDB;
+  --warn: #8A6D1F;        /* dispute / stringency */
+  --warn-soft: #F1E8C9;
+  --display: "Frank Ruhl Libre", "Times New Roman", Georgia, serif;
+  --body: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
+  --mono: "IBM Plex Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #15201F; --paper: #1D2A29; --ink: #ECEFE9; --ink-2: #A9B5B0; --line: #3B4A48;
+    --flame: #E99A49; --flame-soft: #3E2E1C; --ok: #7CC9A3; --ok-soft: #1F3A30;
+    --no: #E58A8A; --no-soft: #432626; --warn: #D9BC63; --warn-soft: #3D3519;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #15201F; --paper: #1D2A29; --ink: #ECEFE9; --ink-2: #A9B5B0; --line: #3B4A48;
+  --flame: #E99A49; --flame-soft: #3E2E1C; --ok: #7CC9A3; --ok-soft: #1F3A30;
+  --no: #E58A8A; --no-soft: #432626; --warn: #D9BC63; --warn-soft: #3D3519;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 17px; line-height: 1.55; margin: 0; }
+.wrap { max-width: 1040px; margin: 0 auto; padding-inline: 20px; padding-block: 0 80px; }
+a { color: inherit; }
+h1, h2, h3 { font-family: var(--display); font-weight: 500; line-height: 1.15; text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(40px, 7vw, 68px); }
+h2 { font-size: clamp(28px, 4vw, 38px); }
+h3 { font-size: 22px; }
+p { margin: 0; max-width: 64ch; }
+.he { font-family: var(--display); direction: rtl; unicode-bidi: isolate; font-size: 1.08em; }
+.term { font-style: italic; }
+.eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-2); }
+.mono { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+svg { max-width: 100%; height: auto; display: block; }
+.ill { stroke: var(--ink); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.ill .fl { fill: var(--flame); stroke: none; }
+.ill .fs { fill: var(--flame-soft); stroke: none; }
+.ill .pp { fill: var(--paper); }
+.ill .tx { fill: var(--ink); stroke: none; font-family: var(--mono); font-size: 12px; }
+.ill .tx2 { fill: var(--ink-2); stroke: none; font-family: var(--body); font-size: 12px; }
+
+/* header */
+header { padding-block: 56px 28px; border-bottom: 1px solid var(--line); display: grid; grid-template-columns: 1.1fr 1fr; gap: 32px; align-items: end; }
+header .meta { display: flex; flex-wrap: wrap; gap: 10px 22px; margin-top: 18px; font-size: 15px; color: var(--ink-2); }
+header .meta a { color: var(--ink); }
+.watch { display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 12px; color: var(--ink-2); text-decoration: none; border: 1px solid var(--line); border-radius: 999px; padding: 3px 10px 3px 8px; white-space: nowrap; }
+.watch:hover, .watch:focus-visible { color: var(--ink); border-color: var(--ink); outline: none; }
+.watch svg { width: 10px; height: 10px; stroke: none; fill: var(--flame); }
+
+/* sections */
+section { padding-block: 56px; border-bottom: 1px solid var(--line); }
+.shead { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 10px 20px; margin-bottom: 8px; }
+.lede { color: var(--ink-2); font-size: 18px; margin-bottom: 28px; }
+.grid { display: grid; gap: 20px; }
+.g2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.g3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.g4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.card { background: var(--paper); border: 1px solid var(--line); border-radius: 6px; padding: 20px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.card svg { width: 100%; max-width: 160px; margin-inline: auto; }
+.card h3 { font-size: 20px; }
+.card .sub { color: var(--ink-2); font-size: 15px; }
+.card .ref { font-family: var(--mono); font-size: 12px; color: var(--ink-2); margin-top: auto; padding-top: 6px; }
+.stage { display: grid; grid-template-columns: 120px 1fr; gap: 18px; align-items: center; padding: 18px 0; border-top: 1px solid var(--line); }
+.stage:last-child { border-bottom: 1px solid var(--line); }
+.stage svg { width: 120px; height: 120px; }
+.stage .n { font-family: var(--mono); font-size: 12px; color: var(--ink-2); }
+.callout { background: var(--paper); border-left: 4px solid var(--flame); padding: 16px 20px; display: grid; grid-template-columns: 1fr auto; gap: 20px; align-items: center; margin-top: 28px; }
+.callout svg { width: 170px; }
+.pill { display: inline-block; font-family: var(--mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; padding: 2px 8px; border-radius: 3px; }
+.pill.ok { background: var(--ok-soft); color: var(--ok); }
+.pill.no { background: var(--no-soft); color: var(--no); }
+.pill.warn { background: var(--warn-soft); color: var(--warn); }
+.diag { overflow-x: auto; margin-block: 24px; }
+.diag svg { min-width: 640px; }
+.twocol { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: start; }
+ul.clean { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+ul.clean li { padding-left: 18px; position: relative; }
+ul.clean li::before { content: ""; position: absolute; left: 0; top: .62em; width: 8px; height: 8px; border-radius: 50%; background: var(--flame); }
+
+/* matrix */
+table { width: 100%; border-collapse: collapse; font-size: 15px; }
+th, td { text-align: left; padding: 12px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-family: var(--mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; font-weight: 500; color: var(--ink-2); }
+td:first-child { font-weight: 600; white-space: nowrap; }
+td .why { display: block; color: var(--ink-2); font-size: 13.5px; margin-top: 4px; }
+.tablewrap { overflow-x: auto; margin-top: 24px; }
+.tablewrap table { min-width: 680px; }
+
+/* glossary */
+dl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 32px; margin: 0; }
+dl div { border-top: 1px solid var(--line); padding-top: 12px; min-width: 0; }
+dt { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; font-weight: 600; }
+dt .he { font-weight: 400; color: var(--ink-2); }
+dd { margin: 4px 0 0; color: var(--ink-2); font-size: 15px; }
+
+/* explainer */
+.player { background: var(--paper); border: 1px solid var(--line); border-radius: 6px; padding: 20px; display: grid; gap: 16px; }
+.player svg { width: 100%; max-width: 640px; margin-inline: auto; }
+.xp-caption { min-height: 84px; border-top: 1px solid var(--line); padding-top: 14px; }
+.xp-caption p { max-width: none; font-size: 17px; margin-top: 6px; }
+.xp-controls { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.btn { font: 500 14px var(--body); color: var(--paper); background: var(--ink); border: 1px solid var(--ink); border-radius: 4px; padding: 8px 16px; cursor: pointer; min-width: 76px; }
+.btn.ghost { background: transparent; color: var(--ink); }
+.btn:focus-visible { outline: 2px solid var(--flame); outline-offset: 2px; }
+.xp-track { flex: 1 1 200px; height: 10px; background: var(--line); border-radius: 5px; position: relative; cursor: pointer; min-width: 0; }
+.xp-track:focus-visible { outline: 2px solid var(--flame); outline-offset: 3px; }
+.xp-fill { height: 100%; width: 0; background: var(--flame); border-radius: 5px; }
+.xp-marks { position: absolute; inset: 0; }
+.xp-marks span { position: absolute; top: -3px; width: 2px; height: 16px; background: var(--paper); transform: translateX(-1px); }
+#xp-hand { transition: transform .35s ease; }
+@media (prefers-reduced-motion: reduce) { #xp-hand { transition: none; } }
+
+footer { padding-block: 32px 0; color: var(--ink-2); font-size: 14px; }
+footer p { max-width: none; }
+
+@media (max-width: 760px) {
+  header { grid-template-columns: 1fr; }
+  .g3, .g4, .twocol, dl { grid-template-columns: 1fr; }
+  .g2 { grid-template-columns: 1fr; }
+  .callout { grid-template-columns: 1fr; }
+  .stage { grid-template-columns: 88px 1fr; gap: 12px; }
+  .stage svg { width: 88px; height: 88px; }
+}
+@media (min-width: 761px) and (max-width: 980px) { .g4 { grid-template-columns: repeat(2, minmax(0,1fr)); } }
+@media (prefers-reduced-motion: no-preference) {
+  .steam { animation: rise 3.2s ease-in-out infinite; transform-origin: center bottom; }
+  @keyframes rise { 0%,100% { opacity: .35; transform: translateY(0) } 50% { opacity: 1; transform: translateY(-4px) } }
+}
+/* class nav */
+.topnav { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px 20px; padding-block: 16px; border-bottom: 1px solid var(--line); }
+.topnav .links { display: flex; gap: 18px; flex-wrap: wrap; }
+.topnav a { font-size: 14px; text-decoration: none; color: var(--ink-2); padding: 4px 0; border-bottom: 2px solid transparent; }
+.topnav a[aria-current], .topnav a:hover { color: var(--ink); border-color: var(--flame); }
+header { border-top: none; }
+.watch svg { width: 10px !important; height: 10px !important; min-width: 0 !important; display: inline-block; margin: 0 !important; }
+.watch { vertical-align: middle; }
+</style>
+
+<body>
+
+<div class="wrap">
+
+<nav class="topnav" aria-label="Classes">
+  <span class="eyebrow">Hilchot Shabbat · Bishul series</span>
+  <div class="links"><a href="index.html">Class 1 · Parameters</a><a href="class-2.html">Class 2 · Kiruv Bishul</a><a href="class-3.html" aria-current="page">Class 3 · Kli Sheni</a></div>
+</nav>
+
+<header>
+  <div>
+    <div class="eyebrow">Class 3 · October 22, 2026</div>
+    <h1 style="margin-top:10px">Kli rishon, kli sheni, kli shlishi</h1>
+    <p class="lede" style="margin:14px 0 0">Study aid for the third shiur: which vessel can cook and why, the stringency that treats every food as easily cooked, what counts as a liquid or a spice, how to make tea and coffee, melting ice, and the chumra of the ambati.</p>
+    <div class="meta">
+      <span>Source: <span class="he">שולחן ערוך</span> 318</span>
+      <a class="watch" href="https://fathom.video/share/N2Qs5RfWDtrqNTSxavxvkvyiZ-PccCjv" target="_blank" rel="noopener"><svg viewBox="0 0 10 10"><path d="M1 0.5 L9.5 5 L1 9.5 Z"/></svg> Full recording</a>
+    </div>
+  </div>
+  <!-- Hero: urn → cup → cup -->
+  <svg class="ill" viewBox="0 0 460 250" aria-label="An urn pours into a cup, which is poured into a second cup">
+    <rect x="30" y="50" width="96" height="150" rx="8" class="pp"/>
+    <rect x="22" y="40" width="112" height="12" rx="4" class="pp"/>
+    <circle cx="78" cy="30" r="6" class="pp"/><path d="M78 36 v4"/>
+    <rect x="42" y="66" width="72" height="120" rx="4" class="fs"/>
+    <path d="M96 210 c-8 -10 -1 -18 5 -22 c-1 7 5 8 6 4 c4 6 1 14 -4 18 Z" class="fl"/>
+    <path d="M126 150 h20 v12"/><path d="M146 166 v24" stroke="var(--flame)" stroke-dasharray="3 4"/>
+    <path d="M128 196 h40 l-5 40 h-30 Z" class="pp"/><path d="M132 206 h32" class="fs"/><rect x="132" y="206" width="32" height="26" class="fs"/>
+    <path d="M168 206 q14 0 14 12 q0 12 -14 12"/>
+    <path d="M196 182 q40 -56 86 -10" stroke="var(--ink-2)" stroke-dasharray="4 4"/><path d="M276 166 l8 8 l-10 2" stroke="var(--ink-2)"/>
+    <path d="M298 196 h40 l-5 40 h-30 Z" class="pp"/><rect x="302" y="206" width="32" height="26" class="fs"/>
+    <path d="M338 206 q14 0 14 12 q0 12 -14 12"/>
+    <g class="steam"><path d="M140 186 c-4 -6 4 -8 0 -14 M156 186 c-4 -6 4 -8 0 -14 M312 188 c-4 -6 4 -8 0 -14" stroke="var(--ink-2)"/></g>
+    <text x="78" y="232" class="tx" text-anchor="middle">kli rishon</text>
+    <text x="150" y="250" class="tx" text-anchor="middle">kli sheni</text>
+    <text x="318" y="250" class="tx" text-anchor="middle">kli shlishi</text>
+    <text x="400" y="200" class="tx2" text-anchor="middle">milk, sugar,</text>
+    <text x="400" y="216" class="tx2" text-anchor="middle">tea go here</text>
+  </svg>
+</header>
+
+<!-- ============ THE CHAIN ============ -->
+<section id="chain">
+  <div class="shead">
+    <h2>The three vessels</h2>
+    <a class="watch" href="https://fathom.video/share/N2Qs5RfWDtrqNTSxavxvkvyiZ-PccCjv?timestamp=1132" target="_blank" rel="noopener"><svg viewBox="0 0 10 10"><path d="M1 0.5 L9.5 5 L1 9.5 Z"/></svg> 18:52</a>
+  </div>
+  <p class="lede">The syllabus said bishul achar bishul tonight; the Rabbi switched the order so he can use these terms when that topic comes. Class 1 set when something counts as cooking (reaching yad soledes bo). This class asks which vessels have the strength to cook at all.</p>
+
+  <div class="stage">
+    <svg class="ill" viewBox="0 0 120 120" aria-hidden="true">
+      <rect x="22" y="40" width="76" height="50" rx="4" class="pp"/><path d="M18 36 h84 M22 56 h-10 M98 56 h10"/>
+      <path d="M28 52 q10 8 20 0 q10 8 20 0 q10 8 20 0" class="fs"/>
+      <path d="M50 116 c-8 -10 -1 -17 5 -22 c-1 7 5 8 6 4 c4 6 1 14 -4 18 Z" class="fl"/>
+      <g class="steam"><path d="M44 28 c-4 -6 4 -8 0 -14 M62 28 c-4 -6 4 -8 0 -14 M80 28 c-4 -6 4 -8 0 -14" stroke="var(--ink-2)"/></g>
+    </svg>
+    <div>
+      <div class="n">1 · <span class="he">כלי ראשון</span></div>
+      <h3>Kli rishon <span class="pill no">Cooks</span></h3>
+      <p style="margin-top:6px">The vessel the food was heated in: the urn, the pot of soup, the cholent pot. It stays a kli rishon after it comes off the fire, so a raw carrot may not go into a hot pot of soup on the counter either. <a class="watch" href="https://fathom.video/share/N2Qs5RfWDtrqNTSxavxvkvyiZ-PccCjv?timestamp=1334" target="_blank" rel="noopener"><svg viewBox="0 0 10 10"><path d="M1 0.5 L9.5 5 L1 9.5 Z"/></svg> 22:14</a></p>
+      <p style="margin-top:8px;color:var(--ink-2);font-size:15px">Off the fire, is it de'oraisa? The Yerushalmi implies only derabanan: a gezeira because the pot used to be on the fire. The Bavli implies it truly cooks, and the poskim rule that way: a kli rishon off the fire cooks mide'oraisa.</p>
+    </div>
+  </div>
+  <div class="stage">
+    <svg class="ill" viewBox="0 0 120 120" aria-hidden="true">
+      <path d="M20 54 q40 50 80 0 Z" class="pp"/><path d="M16 54 h88"/>
+      <path d="M28 62 q32 18 64 0" class="fs"/>
+      <g class="steam"><path d="M48 44 c-4 -6 4 -8 0 -14 M66 44 c-4 -6 4 -8 0 -14" stroke="var(--ink-2)"/></g>
+    </svg>
+    <div>
+      <div class="n">2 · <span class="he">כלי שני</span></div>
+      <h3>Kli sheni <span class="pill ok">Does not cook</span></h3>
+      <p style="margin-top:6px">Anything filled from a kli rishon: the cup from the urn, the serving dish from the pot, the bowl of soup. The Mishnah says it does not cook, even while it is far above yad soledes bo. <a class="watch" href="https://fathom.video/share/N2Qs5RfWDtrqNTSxavxvkvyiZ-PccCjv?timestamp=1447" target="_blank" rel="noopener"><svg viewBox="0 0 10 10"><path d="M1 0.5 L9.5 5 L1 9.5 Z"/></svg> 24:07</a></p>
+    </div>
+  </div>
+  <div class="stage">
+    <svg class="ill" viewBox="0 0 120 120" aria-hidden="true">
+      <path d="M36 40 h48 l-6 54 h-36 Z" class="pp"/><rect x="41" y="52" width="38" height="36" class="fs"/>
+      <path d="M84 50 q16 0 16 14 q0 14 -16 14"/>
+    </svg>
+    <div>
+      <div class="n">3 · <span class="he">כלי שלישי</span></div>
+      <h3>Kli shlishi <span class="pill ok">Even more lenient</span></h3>
+      <p style="margin-top:6px">Filled from a kli sheni: a second cup, or the bowl ladled from the serving dish. Whether it adds anything beyond a kli sheni is a machlokes, below. <a class="watch" href="https://fathom.video/share/N2Qs5RfWDtrqNTSxavxvkvyiZ-PccCjv?timestamp=3809" target="_blank" rel="noopener"><svg viewBox="0 0 10 10"><path d="M1 0.5 L9.5 5 L1 9.5 Z"/></svg> 1:03:29</a></p>
+    </div>
+  </div>
+
+  <div class="callout">
+    <div>
+      <div class="eyebrow">Exceptions in both directions</div>
+      <h3 style="margin-top:6px">Kalei habishul and basar shor</h3>
+      <p style="margin-top:8px"><strong>Stricter:</strong> some delicate foods cook so easily that they may not go even into a kli sheni. The Mishnah lists salted fish and kolias ha'ispanin (a kind of fish). <a class="watch" href="https://fathom.video/share/N2Qs5RfWDtrqNTSxavxvkvyiZ-PccCjv?timestamp=1566" target="_blank" rel="noopener"><svg viewBox="0 0 10 10"><path d="M1 0.5 L9.5 5 L1 9.5 Z"/></svg> 26:06</a></p>
+      <p style="margin-top:8px"><strong>More lenient:</strong> the Gemara says ox meat is so tough that only fire itself cooks it, so it may go into a kli rishon off the fire. Not practical, though: the moisture in the meat still cooks. It only shows that the kli rishon rule is about ordinary food. <a class="watch" href="https://fathom.video/share/N2Qs5RfWDtrqNTSxavxvkvyiZ-PccCjv?timestamp=1620" target="_blank" rel="noopener"><svg viewBox="0 0 10 10"><path d="M1 0.5 L9.5 5 L1 9.5 Z"/></svg> 27:00</a></p>
+    </div>
+    <svg class="ill" viewBox="0 0 170 120" aria-hidden="true">
+      <path d="M14 70 q30 -26 60 0 q-30 22 -60 0 Z" class="pp"/><path d="M74 70 l12 -10 v20 Z" class="pp"/><circle cx="30" cy="66" r="2" fill="var(--ink)" stroke="none"/>
+      <text x="48" y="104" class="tx2" text-anchor="middle">kalei habishul</text>
+      <path d="M112 50 q22 -14 44 0 q6 20 -10 30 q-20 8 -34 -6 q-8 -12 0 -24 Z" class="pp"/><path d="M124 60 q10 6 20 0" stroke="var(--no)"/>
+      <text x="134" y="104" class="tx2" text-anchor="middle">basar shor</text>
+    </svg>
+  </div>
+</section>
+
+<!-- ============ WHY ============ -->
+<section id="why">
+  <div class="shead">
+    <h2>Why can't a kli sheni cook?</h2>
+    <a class="watch" href="https://fathom.video/share/N2Qs5RfWDtrqNTSxavxvkvyiZ-PccCjv?timestamp=1530" target="_blank" rel="noopener"><svg viewBox="0 0 10 10"><path d="M1 0.5 L9.5 5 L1 9.5 Z"/></svg> 25:30</a>
+  </div>
+  <p class="lede">The obvious answer, that it is cooler, does not work. The Rabbi showed a kli sheni that is hotter than a kli rishon.</p>
+  <div class="twocol">
+    <svg class="ill" viewBox="0 0 320 230" aria-label="A cup of urn water at 195°F next to a soup pot on the counter at 185°F">
+      <path d="M40 90 h60 l-8 80 h-44 Z" class="pp"/><rect x="46" y="104" width="48" height="60" class="fs"/>
+      <path d="M100 104 q20 0 20 20 q0 20 -20 20"/>
+      <text x="70" y="196" class="tx" text-anchor="middle" style="font-size:16px;font-weight:500">195°F</text>
+      <text x="70" y="214" class="tx2" text-anchor="middle">kli sheni (from the urn)</text>
+      <rect x="180" y="96" width="110" height="74" rx="4" class="pp"/><path d="M174 92 h122 M180 112 h-12 M290 112 h12"/>
+      <path d="M188 110 q12 8 24 0 q12 8 24 0 q12 8 24 0 q12 8 24 0" class="fs"/>
+      <rect x="166" y="170" width="138" height="6" rx="2"/>
+      <text x="235" y="196" class="tx" text-anchor="middle" style="font-size:16px;font-weight:500">185°F</text>
+      <text x="235" y="214" class="tx2" text-anchor="middle">pot on the counter</text>
+      <path d="M120 40 l16 -10 l16 10" stroke="var(--ink-2)"/><text x="160" y="26" class="tx2" text-anchor="middle">hotter, but cannot cook</text>
+    </svg>
+    <div>
+      <ul class="clean">
+        <li><strong>If it were only a gezeira</strong> (the Yerushalmi's view), the answer is easy: the pot was once on the fire, so the Rabbis worried you would add food while it was there; a cup was never on the fire. But we rule a kli rishon off the fire cooks de'oraisa, so that answer is not available.</li>
+        <li><strong>Tosafos: the walls.</strong> A kli rishon's walls are hot, so it holds its heat. A kli sheni's walls are cold, so it keeps cooling, <em>holech u'miskarer</em>. <a class="watch" href="https://fathom.video/share/N2Qs5RfWDtrqNTSxavxvkvyiZ-PccCjv?timestamp=2340" target="_blank" rel="noopener"><svg viewBox="0 0 10 10"><path d="M1 0.5 L9.5 5 L1 9.5 Z"/></svg> 39:00</a></li>
+        <li><strong>The problem:</strong> you may not dip a carrot in the pot even for ten seconds, and in the next ten seconds the cup is still the hotter one. How do cold walls help now? <a class="watch" href="https://fathom.video/share/N2Qs5RfWDtrqNTSxavxvkvyiZ-PccCjv?timestamp=2476" target="_blank" rel="noopener"><svg viewBox="0 0 10 10"><path d="M1 0.5 L9.5 5 L1 9.5 Z"/></svg> 41:16</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout">
+    <div>
+      <div class="eyebrow">The answer · <a class="watch" href="https://fathom.video/share/N2Qs5RfWDtrqNTSxavxvkvyiZ-PccCjv?timestamp=2645" target="_blank" rel="noopener"><svg viewBox="0 0 10 10"><path d="M1 0.5 L9.5 5 L1 9.5 Z"/></svg> 44:05</a></div>
+      <h3 style="margin-top:6px">The question is the vessel's strength, not the next ten seconds</h3>
+      <p style="margin-top:8px">Nothing cooks in ten seconds, even in a pot on the fire. The ten-second dip is forbidden for the reason from class 1: you may not put food anywhere it <em>could</em> cook if left there, in case you forget it. A kli rishon holds its heat long enough to bring food to the start of cooking, so even a quick dip is forbidden. A kli sheni cools too fast to ever get there, so leaving food in it is harmless, even while it is boiling hot right now. The same idea explains kalei habishul: those foods do cook in the weaker heat, so they stay out of a kli sheni.</p>
+      <p style="margin-top:8px;color:var(--ink-2);font-size:15px">Liran's suggestion during class, that you might leave it in the pot longer, was "on the right track." The Rabbi credited this explanation to a Rishon whose work was printed later; the name is unclear in the recording. Asked whether thick walls change things: in principle maybe, but halacha does not make that distinction.</p>
+    </div>
+    <svg class="ill" viewBox="0 0 170 120" aria-hidden="true">
+      <path d="M14 100 h146 M14 100 v-90" stroke="var(--ink-2)"/>
+      <path d="M14 20 q60 4 146 30" stroke="var(--flame)" stroke-width="3"/>
+      <path d="M14 30 q30 40 146 64" stroke="var(--ink)" stroke-width="3" stroke-dasharray="5 4"/>
+      <path d="M14 46 h146" stroke="var(--no)" stroke-dasharray="2 3"/>
+      <text x="150" y="42" class="tx2" text-anchor="end" style="font-size:10px">rishon</text>
+      <text x="150" y="88" class="tx2" text-anchor="end" style="font-size:10px">sheni</text>
+      <text x="18" y="58" class="tx2" style="font-size:10px;fill:var(--no)">enough to cook</text>
+      <text x="86" y="116" class="tx2" text-anchor="middle" style="font-size:10px">time →</text>
+    </svg>
+  </div>
+</section>
+
+<!-- ============ STRINGENCY ============ -->
+<section id="chumra">
+  <div class="shead">
+    <h2>The stringency: every food may be kalei habishul</h2>
+    <a class="watch" href="https://fathom.video/share/N2Qs5RfWDtrqNTSxavxvkvyiZ-PccCjv?timestamp=3375" target="_blank" rel="noopener"><svg viewBox="0 0 10 10"><path d="M1 0.5 L9.5 5 L1 9.5 Z"/></svg> 56:15</a>
+  </div>
+  <p class="lede">The Gemara permits almost any raw food in a kli sheni. In practice we put almost nothing in. Here is why.</p>
+  <div class="twocol">
+    <div>
+      <p><strong>The Mishnah's list is not complete.</strong> The Sefer Yereim (R' Eliezer of Metz, a talmid of Rabbeinu Tam) proves it from salt. The Gemara records a machlokes whether salt is like ox meat (cooks only on the fire) or kalei habishul (not even in a kli sheni). If the Mishnah's list were complete, salt's absence would settle that machlokes. The Gemara does not treat it that way, so the list is only examples.</p>
+      <p style="margin-top:12px"><strong>So we cannot know which foods are kalei habishul,</strong> and we treat every food as if it might be. Contemporary poskim name raw eggs as truly kalei habishul, and some mention instant oats.</p>
+    </div>
+    <div>
+      <h3>What we know may go into a kli sheni</h3>
+      <ul class="clean" style="margin-top:10px">
+        <li><strong>Liquids.</strong> The Gemara shows water (cooling a bath) and oil (warming a flask of oil in hot water, like warming a baby bottle). The <strong>Alter Rebbe</strong> reads this as any natural liquid. The <strong>Mishnah Berurah</strong> allows only water and oil, though for milk he will agree for another reason (it is already pasteurized).</li>
+        <li><strong>Spices (tavlin).</strong> The Gemara says you may not pour hot water onto spices, but you may put them into a kli sheni.</li>
+        <li>Everything else: not into a kli sheni.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SHLISHI ============ -->
+<section id="shlishi">
+  <div class="shead">
+    <h2>Does a kli shlishi help?</h2>
+    <a class="watch" href="https://fathom.video/share/N2Qs5RfWDtrqNTSxavxvkvyiZ-PccCjv?timestamp=3809" target="_blank" rel="noopener"><svg viewBox="0 0 10 10"><path d="M1 0.5 L9.5 5 L1 9.5 Z"/></svg> 1:03:29</a>
+  </div>
+  <div class="grid g2">
+    <div class="card">
+      <h3><span class="pill warn">Strict view</span></h3>
+      <div><strong>The Yereim:</strong> no difference. In the source the Shulchan Aruch quotes, he says explicitly that bread or matzah may go neither into a sheni nor a shlishi. It also makes sense: if the worry is that a food is easily cooked, a third cup has the same cold walls and hot water as the second. Many families follow this and do not use a kli shlishi for anything they would not put in a kli sheni.</div>
+    </div>
+    <div class="card">
+      <h3><span class="pill ok">Common practice</span></h3>
+      <div><strong>The Mishnah Berurah, citing the Pri Megadim:</strong> in kashrus we distinguish. A fleishig spoon in a bowl of hot soup (kli sheni) must be kashered; soup that spilled onto a milchig counter (kli shlishi) does not make it treif. Since keeping food out of a kli sheni is itself only a chumra, we need not extend it further. This is the accepted practice. <a class="watch" href="https://fathom.video/share/N2Qs5RfWDtrqNTSxavxvkvyiZ-PccCjv?timestamp=4389" target="_blank" rel="noopener"><svg viewBox="0 0 10 10"><path d="M1 0.5 L9.5 5 L1 9.5 Z"/></svg> 1:13:09</a></div>
+      <div class="sub">The song from class: "There ain't no bishul in a kli shlishi." One seminary gave the Rabbi a mug printed with his class drawings.</div>
+    </div>
+  </div>
+  <div class="callout">
+    <div>
+      <div class="eyebrow">Salt · <a class="watch" href="https://fathom.video/share/N2Qs5RfWDtrqNTSxavxvkvyiZ-PccCjv?timestamp=4533" target="_blank" rel="noopener"><svg viewBox="0 0 10 10"><path d="M1 0.5 L9.5 5 L1 9.5 Z"/></svg> 1:15:33</a></div>
+      <h3 style="margin-top:6px">Where salt lands</h3>
+      <p style="margin-top:8px">Raw, unprocessed salt: the letter of the law follows the lenient view, so it could even go into a kli rishon off the fire. But it is good to be strict for the other view and keep it out of a kli sheni. So, like other foods, salt goes into a kli shlishi. (Processed salt has another layer, coming with bishul achar bishul.)</p>
+    </div>
+    <svg class="ill" viewBox="0 0 170 120" aria-hidden="true">
+      <rect x="62" y="30" width="46" height="66" rx="8" class="pp"/><path d="M62 44 h46"/>
+      <circle cx="74" cy="22" r="2" class="pp"/><circle cx="85" cy="20" r="2" class="pp"/><circle cx="96" cy="22" r="2" class="pp"/>
+      <path d="M68 30 q17 -18 34 0" class="pp"/>
+    </svg>
+  </div>
+</section>
+
+<!-- ============ SPICES ============ -->
+<section id="spices">
+  <div class="shead">
+    <h2>What counts as a spice?</h2>
+    <a class="watch" href="https://fathom.video/share/N2Qs5RfWDtrqNTSxavxvkvyiZ-PccCjv?timestamp=4860" target="_blank" rel="noopener"><svg viewBox="0 0 10 10"><path d="M1 0.5 L9.5 5 L1 9.5 Z"/></svg> 1:21:00</a>
+  </div>
+  <p class="lede">There is no single definition. Common ones: something added only to give flavor that you do not end up eating, or something you could reuse to flavor another dish.</p>
+  <div class="twocol">
+    <ul class="clean">
+      <li><strong>Spices Chazal never knew.</strong> R' Chaim Naeh raises lemon, which they did not have: maybe Chazal meant only their own spices. The accepted approach: anything that meets the criteria of a spice counts.</li>
+      <li><strong>Ground spices.</strong> The Shemiras Shabbos K'hilchasa is strict: Chazal meant a whole cinnamon stick or bay leaf; finely ground pepper or garlic powder cooks easily. Most poskim disagree: Chazal made a rule without regard to size. In practice it matters little, because the habit is to use a kli shlishi anyway.</li>
+      <li><strong>Pepper, herbs, garnish (basil, cilantro), sugar:</strong> spices. Lemon probably is too; you may put it in but not squeeze it (a later topic).</li>
+      <li><strong>Salt:</strong> fits the criteria, but Chazal singled it out as an exception (above).</li>
+    </ul>
+    <div>
+      <h3>Tea <a class="watch" href="https://fathom.video/share/N2Qs5RfWDtrqNTSxavxvkvyiZ-PccCjv?timestamp=5355" target="_blank" rel="noopener"><svg viewBox="0 0 10 10"><path d="M1 0.5 L9.5 5 L1 9.5 Z"/></svg> 1:29:15</a></h3>
+      <p style="margin-top:8px">Tea fits most definitions of a spice: it flavors the water and you do not even drink the leaves. Still:</p>
+      <ul class="clean" style="margin-top:10px">
+        <li><strong>Mishnah Berurah:</strong> worried tea is true kalei habishul, so not even in a kli shlishi. Those who follow him make <strong>tea essence</strong> before Shabbos and add it to a cup of hot water.</li>
+        <li><strong>R' Moshe Feinstein:</strong> most probably a spice and could go in a kli sheni, but use a kli shlishi to be safe. The prevalent American practice.</li>
+        <li><strong>Alter Rebbe:</strong> no direct proof. Rabbi Farkash understands the Tzemach Tzedek's criteria to include tea as a spice, so many Lubavitchers follow R' Moshe and use a kli shlishi.</li>
+      </ul>
+      <p style="margin-top:12px;color:var(--ink-2);font-size:15px">But the water changes color! That does not prove cooking. A tea bag in cold water also colors and flavors it, just slower. <a class="watch" href="https://fathom.video/share/N2Qs5RfWDtrqNTSxavxvkvyiZ-PccCjv?timestamp=5593" target="_blank" rel="noopener"><svg viewBox="0 0 10 10"><path d="M1 0.5 L9.5 5 L1 9.5 Z"/></svg> 1:33:13</a></p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TEA AND COFFEE ============ -->
+<section id="cup">
+  <div class="shead">
+    <h2>Making the cup</h2>
+    <a class="watch" href="https://fathom.video/share/N2Qs5RfWDtrqNTSxavxvkvyiZ-PccCjv?timestamp=5811" target="_blank" rel="noopener"><svg viewBox="0 0 10 10"><path d="M1 0.5 L9.5 5 L1 9.5 Z"/></svg> 1:36:51</a>
+  </div>
+  <p class="lede">Before the ambati chumra (below), this is what each vessel can take. After it, the answer is simpler: make a kli shlishi and put everything there.</p>
+  <div class="tablewrap" style="margin-top:0">
+    <table>
+      <thead><tr><th>Item</th><th>Kli sheni (cup from the urn)</th><th>Kli shlishi (second cup)</th></tr></thead>
+      <tbody>
+        <tr><td>Cold water, ice cube</td><td><span class="pill ok">Yes</span><span class="why">A liquid.</span></td><td><span class="pill ok">Yes</span></td></tr>
+        <tr><td>Milk, honey, tea essence</td><td><span class="pill ok">Yes</span><span class="why">Liquids (Alter Rebbe); milk is pasteurized (Mishnah Berurah).</span></td><td><span class="pill ok">Yes</span></td></tr>
+        <tr><td>Sugar</td><td><span class="pill ok">Yes</span><span class="why">A spice.</span></td><td><span class="pill ok">Yes</span></td></tr>
+        <tr><td>Lemon slice</td><td><span class="pill ok">Probably</span><span class="why">Likely a spice. Do not squeeze.</span></td><td><span class="pill ok">Yes</span></td></tr>
+        <tr><td>Tea bag</td><td><span class="pill no">No</span><span class="why">We do not treat tea as a spice.</span></td><td><span class="pill ok">Yes</span><span class="why">R' Moshe and common practice. Mishnah Berurah: only tea essence.</span></td></tr>
+        <tr><td>Ground coffee</td><td><span class="pill no">No</span><span class="why">Probably a spice, but the custom is a kli shlishi.</span></td><td><span class="pill ok">Yes</span></td></tr>
+        <tr><td>Instant coffee</td><td><span class="pill warn">Machlokes</span><span class="why">Already cooked: the Mishnah Berurah allows a kli sheni; the Alter Rebbe probably needs a kli shlishi. Full treatment with bishul achar bishul.</span></td><td><span class="pill ok">Yes</span></td></tr>
+        <tr><td>Splenda</td><td><span class="pill warn">Unchecked</span><span class="why">Probably like sugar; the Rabbi wanted to check first.</span></td><td><span class="pill ok">Yes</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="twocol" style="margin-top:32px">
+    <div>
+      <h3>Bag first, or water first?</h3>
+      <p style="margin-top:8px">Putting the tea bag in an empty cup and pouring the kli sheni water onto it (<em>iruy</em> from a kli sheni) is fine. Pouring from a kli sheni has the status of a kli shlishi by most opinions, and the stream does not need to be broken. Some prefer adding the bag afterwards; there is even an argument from <em>tata'ah gavar</em> that pouring onto it is gentler. Bottom line: unless the tea is true kalei habishul, either order works.</p>
+      <p style="margin-top:8px;color:var(--ink-2);font-size:15px">Q: Is the tea bag itself a kli? No. Rishon, sheni and shlishi always describe the hot vessel. <a class="watch" href="https://fathom.video/share/N2Qs5RfWDtrqNTSxavxvkvyiZ-PccCjv?timestamp=5952" target="_blank" rel="noopener"><svg viewBox="0 0 10 10"><path d="M1 0.5 L9.5 5 L1 9.5 Z"/></svg> 1:39:12</a></p>
+    </div>
+    <div>
+      <h3>Pouring onto instant coffee or sugar <a class="watch" href="https://fathom.video/share/N2Qs5RfWDtrqNTSxavxvkvyiZ-PccCjv?timestamp=7270" target="_blank" rel="noopener"><svg viewBox="0 0 10 10"><path d="M1 0.5 L9.5 5 L1 9.5 Z"/></svg> 2:01:10</a></h3>
+      <p style="margin-top:8px">Some worry the stream actively dissolves the granules, like crushing ice by hand, even with no bishul problem. Rabbi Farkash (building on R' Chaim Naeh) shows from the Alter Rebbe's Siddur that this is no problem: he forbids pouring from the urn onto sugar only because, since the sugar dissolves, it counts as cooking. If dissolving were forbidden in itself, pouring from any vessel would be a problem and his wording would make no sense. The heat dissolves it, not the force of the stream: pour cold water on sugar and nothing happens. <a class="watch" href="https://fathom.video/share/N2Qs5RfWDtrqNTSxavxvkvyiZ-PccCjv?timestamp=7460" target="_blank" rel="noopener"><svg viewBox="0 0 10 10"><path d="M1 0.5 L9.5 5 L1 9.5 Z"/></svg> 2:04:20</a></p>
+      <p style="margin-top:8px"><strong>So:</strong> fill a cup from the urn, put the coffee in a second cup, pour onto it. "That's how I make my coffee."</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ICE ============ -->
+<section id="ice">
+  <div class="shead">
+    <h2>Side topic: melting ice</h2>
+    <a class="watch" href="https://fathom.video/share/N2Qs5RfWDtrqNTSxavxvkvyiZ-PccCjv?timestamp=6338" target="_blank" rel="noopener"><svg viewBox="0 0 10 10"><path d="M1 0.5 L9.5 5 L1 9.5 Z"/></svg> 1:45:38</a>
+  </div>
+  <p class="lede">Not bishul. Crushing ice by hand is forbidden derabanan because it looks like creating a new liquid; it fits none of the 39 melachos. (Some explain the problem with creating an electric current the same way; others disagree.)</p>
+  <div class="grid g4">
+    <div class="card">
+      <svg class="ill" viewBox="0 0 120 90" aria-hidden="true">
+        <rect x="40" y="30" width="26" height="26" rx="3" class="pp"/><rect x="62" y="44" width="20" height="20" rx="3" class="pp"/>
+        <path d="M30 70 q30 -8 60 0" stroke="var(--ink-2)"/>
+        <path d="M86 20 l-14 14 M90 26 l-10 10" stroke="var(--no)" stroke-width="3"/>
+      </svg>
+      <h3><span class="pill no">Forbidden</span></h3>
+      <div><strong>Crushing ice by hand.</strong></div>
+    </div>
+    <div class="card">
+      <svg class="ill" viewBox="0 0 120 90" aria-hidden="true">
+        <rect x="20" y="58" width="80" height="6" rx="2" class="pp"/>
+        <rect x="46" y="38" width="22" height="20" rx="3" class="pp"/>
+        <circle cx="96" cy="20" r="10" class="fs"/><circle cx="96" cy="20" r="10" stroke="var(--flame)"/>
+      </svg>
+      <h3><span class="pill warn">Only in need</span></h3>
+      <div><strong>Putting ice in a warm place to melt it,</strong> like the sun or near a radiator. A machlokes; the Alter Rebbe rules strictly unless there is a need: a baby's formula, drinks for guests. Never somewhere it could reach yad soledes bo, which is bishul. <a class="watch" href="https://fathom.video/share/N2Qs5RfWDtrqNTSxavxvkvyiZ-PccCjv?timestamp=6517" target="_blank" rel="noopener"><svg viewBox="0 0 10 10"><path d="M1 0.5 L9.5 5 L1 9.5 Z"/></svg> 1:48:37</a></div>
+    </div>
+    <div class="card">
+      <svg class="ill" viewBox="0 0 120 90" aria-hidden="true">
+        <path d="M28 46 q32 40 64 0 Z" class="pp"/><path d="M24 46 h72"/>
+        <rect x="50" y="36" width="18" height="18" rx="3" class="pp"/>
+        <g class="steam"><path d="M40 34 c-4 -6 4 -8 0 -14 M82 34 c-4 -6 4 -8 0 -14" stroke="var(--ink-2)"/></g>
+      </svg>
+      <h3><span class="pill ok">Permitted</span></h3>
+      <div><strong>Ice in hot soup or iced coffee outside.</strong> It melts straight into liquid, so you never see a liquid being made. Ice is a liquid, so no bishul in a kli sheni. <a class="watch" href="https://fathom.video/share/N2Qs5RfWDtrqNTSxavxvkvyiZ-PccCjv?timestamp=6703" target="_blank" rel="noopener"><svg viewBox="0 0 10 10"><path d="M1 0.5 L9.5 5 L1 9.5 Z"/></svg> 1:51:43</a></div>
+    </div>
+    <div class="card">
+      <svg class="ill" viewBox="0 0 120 90" aria-hidden="true">
+        <rect x="34" y="14" width="52" height="66" rx="4" class="pp"/><path d="M34 38 h52 M78 22 v8 M78 46 v10"/>
+        <rect x="44" y="52" width="10" height="10" rx="2" class="pp"/>
+      </svg>
+      <h3><span class="pill warn">Only in need</span></h3>
+      <div><strong>Making ice.</strong> Generally treated as the same machlokes in reverse. Some say freezing is fine by all; the Rabbi had not looked into it. Ice out of the freezer onto the table is fine by everyone. <a class="watch" href="https://fathom.video/share/N2Qs5RfWDtrqNTSxavxvkvyiZ-PccCjv?timestamp=6762" target="_blank" rel="noopener"><svg viewBox="0 0 10 10"><path d="M1 0.5 L9.5 5 L1 9.5 Z"/></svg> 1:52:42</a></div>
+    </div>
+  </div>
+  <p style="margin-top:20px;color:var(--ink-2);font-size:15px">Defrosting challah by the fire has no melting issue: no liquid is created. Automatic ice makers will come up with refrigerators and Shabbos mode.</p>
+</section>
+
+<!-- ============ AMBATI ============ -->
+<section id="ambati">
+  <div class="shead">
+    <h2>The chumra of the ambati</h2>
+    <a class="watch" href="https://fathom.video/share/N2Qs5RfWDtrqNTSxavxvkvyiZ-PccCjv?timestamp=7593" target="_blank" rel="noopener"><svg viewBox="0 0 10 10"><path d="M1 0.5 L9.5 5 L1 9.5 Z"/></svg> 2:06:33</a>
+  </div>
+  <p class="lede">A case in the Shulchan Aruch: a bath or mikveh filled with water heated elsewhere and piped in. It is a kli sheni, and liquids may go in a kli sheni, yet you may not add cold water to cool it.</p>
+  <div class="grid g2">
+    <div class="card">
+      <h3><span class="pill ok">Narrow reading</span></h3>
+      <div>A rule for baths only. Baths are made extremely hot, and some add that the hot water keeps flowing in, almost connected to the kli rishon. A cup from the urn keeps the normal kli sheni rules: hot water with milk, or lemon and honey, with no second cup. The <strong>Beis Yosef</strong> holds a kli sheni never cooks, even if it is boiling.</div>
+    </div>
+    <div class="card">
+      <h3><span class="pill warn">The Chayei Adam</span></h3>
+      <div>R' Avraham Danzig of Vilna, author of the Chayei Adam and Chochmas Adam, citing a Rambam: any kli sheni that is <strong>yad nichveis bo</strong>, hot enough to burn the hand, is treated as a kli rishon. A bowl of soup at 170°F is not; a cup straight from a 205°F urn is. Then even liquids and spices may not go in. This never applies to a kli shlishi. <a class="watch" href="https://fathom.video/share/N2Qs5RfWDtrqNTSxavxvkvyiZ-PccCjv?timestamp=7704" target="_blank" rel="noopener"><svg viewBox="0 0 10 10"><path d="M1 0.5 L9.5 5 L1 9.5 Z"/></svg> 2:08:24</a></div>
+    </div>
+  </div>
+  <div class="callout">
+    <div>
+      <div class="eyebrow">Halacha lemaaseh · <a class="watch" href="https://fathom.video/share/N2Qs5RfWDtrqNTSxavxvkvyiZ-PccCjv?timestamp=7983" target="_blank" rel="noopener"><svg viewBox="0 0 10 10"><path d="M1 0.5 L9.5 5 L1 9.5 Z"/></svg> 2:13:03</a></div>
+      <h3 style="margin-top:6px">Always make the third cup</h3>
+      <p style="margin-top:8px">Fill a cup from the urn, pour it into a second cup, then add the milk, sugar, honey, lemon, tea or essence there. Even if all you are adding is milk. "What are you losing out? Not even a cup," since you will use the first cup for something else afterwards.</p>
+    </div>
+    <svg class="ill" viewBox="0 0 170 120" aria-hidden="true">
+      <path d="M14 40 h40 l-5 50 h-30 Z" class="pp"/><rect x="18" y="52" width="32" height="34" class="fs"/>
+      <path d="M62 60 h28 M84 54 l6 6 l-6 6"/>
+      <path d="M102 40 h40 l-5 50 h-30 Z" class="pp"/><rect x="106" y="52" width="32" height="34" class="fs"/>
+      <circle cx="122" cy="30" r="4" class="pp"/><path d="M118 20 h8" stroke="var(--ink-2)"/>
+      <text x="34" y="108" class="tx2" text-anchor="middle">nothing here</text>
+      <text x="122" y="108" class="tx2" text-anchor="middle">everything here</text>
+    </svg>
+  </div>
+</section>
+
+<!-- ============ GLOSSARY ============ -->
+<section id="terms">
+  <div class="shead"><h2>New terms this class</h2></div>
+  <p class="lede">Added to the vocabulary from classes 1 and 2.</p>
+  <dl>
+    <div><dt>Kli rishon <span class="he">כלי ראשון</span></dt><dd>The vessel heated on the fire. Cooks, even off the fire.</dd></div>
+    <div><dt>Kli sheni <span class="he">כלי שני</span></dt><dd>A vessel filled from a kli rishon. Does not cook ordinary food.</dd></div>
+    <div><dt>Kli shlishi <span class="he">כלי שלישי</span></dt><dd>A vessel filled from a kli sheni. By common practice, raw food may go in.</dd></div>
+    <div><dt>Kalei habishul <span class="he">קלי הבישול</span></dt><dd>Easily cooked foods. Forbidden even in a kli sheni or shlishi.</dd></div>
+    <div><dt>Basar shor <span class="he">בשר שור</span></dt><dd>Ox meat. So hard to cook that only fire itself cooks it.</dd></div>
+    <div><dt>Holech u'miskarer <span class="he">הולך ומתקרר</span></dt><dd>"Keeps cooling." Why a kli sheni, with cold walls, lacks the strength to cook.</dd></div>
+    <div><dt>Tavlin <span class="he">תבלין</span></dt><dd>A spice. May go into a kli sheni.</dd></div>
+    <div><dt>Iruy <span class="he">עירוי</span></dt><dd>Pouring. Iruy from a kli sheni has the status of a kli shlishi.</dd></div>
+    <div><dt>Yad nichveis bo <span class="he">יד נכוית בו</span></dt><dd>Hot enough to burn the hand. The Chayei Adam's threshold for treating a kli sheni as a kli rishon.</dd></div>
+    <div><dt>Ambati <span class="he">אמבטי</span></dt><dd>A bath. The source of the Chayei Adam's chumra.</dd></div>
+    <div><dt>Tata'ah gavar <span class="he">תתאה גבר</span></dt><dd>"The lower one prevails." The temperature of the lower item decides.</dd></div>
+    <div><dt>Ein bishul achar bishul <span class="he">אין בישול אחר בישול</span></dt><dd>Once cooked, no further bishul. Next class.</dd></div>
+    <div><dt>Sefer Yereim <span class="he">ספר יראים</span></dt><dd>R' Eliezer of Metz, talmid of Rabbeinu Tam. Strict that a kli shlishi is no better than a kli sheni.</dd></div>
+    <div><dt>Pri Megadim <span class="he">פרי מגדים</span></dt><dd>Source, via the Mishnah Berurah, for the kli shlishi leniency.</dd></div>
+    <div><dt>Chayei Adam <span class="he">חיי אדם</span></dt><dd>R' Avraham Danzig of Vilna. Source of the yad nichveis bo chumra.</dd></div>
+    <div><dt>Shemiras Shabbos K'hilchasa <span class="he">שמירת שבת כהלכתה</span></dt><dd>Contemporary sefer. Strict on finely ground spices.</dd></div>
+  </dl>
+</section>
+
+<section id="next" style="border-bottom:none">
+  <div class="shead">
+    <h2>Follow-ups from the class</h2>
+    <a class="watch" href="https://fathom.video/share/N2Qs5RfWDtrqNTSxavxvkvyiZ-PccCjv?timestamp=8132" target="_blank" rel="noopener"><svg viewBox="0 0 10 10"><path d="M1 0.5 L9.5 5 L1 9.5 Z"/></svg> 2:15:32</a>
+  </div>
+  <ul class="clean" style="margin-top:8px">
+    <li><strong>Next week's class moves to Tuesday</strong> because of the Rabbi's niece's wedding on Thursday. Watch for the confirmation email. If you cannot make it, catch the recording.</li>
+    <li>The Rabbi is posting tonight's illustrations and a list of terms.</li>
+    <li>Still to finish on kli sheni: does the cup you fill at the shul urn need to be dry first? A machlokes between two Tosafists.</li>
+    <li>Then bishul achar bishul: whether sugar, instant coffee and processed salt count as already cooked. Iruy from a kli rishon and the ladle come later.</li>
+    <li>If you are looking for the material in the books: the summaries volume, around page 128, lays out the bishul section in teaching order (tip from Moshe before class).</li>
+  </ul>
+</section>
+
+<footer>
+  <p>Built from the class recording of October 22, 2026. Transliterations follow standard spellings. This is a study aid, not a psak: for practical questions, ask your rav.</p>
+</footer>
+
+</div>
+
+</body>
+</html>
